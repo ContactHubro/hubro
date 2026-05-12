@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hubro — Audit de performance</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1e2d4a;
+    --navy-light: #2a3d60;
+    --terra: #c4623a;
+    --terra-light: #d4795a;
+    --silver: #7a8fa8;
+    --silver-light: #b0bfcf;
+    --white: #ffffff;
+    --off-white: #f5f0e8;
+    --text: #1e2d4a;
+    --text-light: #5a6880;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(30,45,74,0.08);
+  }
+
+  .nav-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+    letter-spacing: 0.18em;
+    color: var(--navy);
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-light);
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--navy); }
+
+  .nav-cta {
+    background: var(--terra);
+    color: var(--white) !important;
+    padding: 0.6rem 1.4rem;
+    border-radius: 2px;
+    font-weight: 500 !important;
+  }
+
+  .nav-cta:hover { background: var(--terra-light); color: var(--white) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 60%;
+    height: 120%;
+    background: linear-gradient(135deg, var(--off-white) 0%, #e8d5c8 100%);
+    clip-path: polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%);
+    z-index: 0;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--silver);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--silver);
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+    line-height: 1.75;
+    color: var(--text-light);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    max-width: 480px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+  }
+
+  .btn-primary {
+    background: var(--terra);
+    color: var(--white);
+    padding: 0.9rem 2rem;
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--terra-light);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    color: var(--navy);
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: gap 0.2s;
+  }
+
+  .btn-secondary:hover { gap: 0.7rem; }
+
+  /* SECTION BASE */
+  section { padding: 6rem 4rem; }
+
+  .section-tag {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--silver);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 600;
+    color: var(--navy);
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+
+  .section-sub {
+    font-size: 1rem;
+    color: var(--text-light);
+    line-height: 1.75;
+    font-weight: 300;
+    max-width: 520px;
+  }
+
+  /* PROBLEME */
+  .probleme {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  .probleme .section-tag { color: var(--silver); }
+  .probleme .section-title { color: var(--white); }
+  .probleme .section-sub { color: var(--silver-light); }
+
+  .probleme-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .friction-list {
+    list-style: none;
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .friction-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: 0.95rem;
+    color: var(--silver-light);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .friction-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--silver);
+    margin-top: 0.55rem;
+    flex-shrink: 0;
+  }
+
+  .probleme-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(168,180,196,0.2);
+    border-radius: 4px;
+    padding: 1.5rem 2rem;
+    transition: background 0.3s;
+  }
+
+  .stat-card:hover { background: rgba(255,255,255,0.08); }
+
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: var(--white);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--silver);
+    font-weight: 300;
+  }
+
+  /* APPROCHE */
+  .approche { background: var(--off-white); }
+
+  .approche-intro {
+    max-width: 700px;
+    margin-bottom: 4rem;
+  }
+
+  .approche-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .approche-card {
+    background: var(--white);
+    border: 1px solid var(--silver-light);
+    border-radius: 4px;
+    padding: 2rem;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .approche-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(30,45,74,0.08);
+  }
+
+  .card-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--terra);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+  }
+
+  .card-text {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* HUMAIN */
+  .humain {
+    background: var(--white);
+  }
+
+  .humain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  .humain-visual {
+    position: relative;
+  }
+
+  .humain-box {
+    background: var(--off-white);
+    border: 1px solid var(--silver-light);
+    border-radius: 4px;
+    padding: 3rem;
+  }
+
+  .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: var(--silver-light);
+    line-height: 0.5;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--navy);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  .humain-points {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .humain-point {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+  }
+
+  .point-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--terra);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .point-icon svg { width: 16px; height: 16px; stroke: var(--white); fill: none; }
+
+  .point-content h4 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 0.3rem;
+  }
+
+  .point-content p {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* CONTACT */
+  .contact {
+    background: var(--navy);
+    color: var(--white);
+    text-align: center;
+  }
+
+  .contact .section-title { color: var(--white); margin-bottom: 1rem; }
+  .contact .section-sub { color: var(--silver-light); margin: 0 auto 2.5rem; text-align: center; }
+
+  .contact-form {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(168,180,196,0.25);
+    border-radius: 2px;
+    padding: 0.9rem 1.2rem;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder { color: var(--silver); }
+
+  .contact-form input:focus,
+  .contact-form textarea:focus { border-color: var(--silver); }
+
+  .contact-form textarea { height: 120px; resize: none; }
+
+  .contact-form button {
+    background: var(--terra);
+    color: var(--white);
+    padding: 0.9rem 2rem;
+    border: none;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .contact-form button:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .contact-info {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: var(--silver);
+    font-weight: 300;
+  }
+
+  .contact-info a { color: var(--silver-light); text-decoration: none; }
+
+  /* FOOTER */
+  footer {
+    background: #151e2e;
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 0.18em;
+    color: var(--silver);
+    text-transform: uppercase;
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: var(--silver);
+    font-weight: 300;
+    opacity: 0.6;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 2rem; }
+    .hero { padding: 7rem 2rem 3rem; }
+    .probleme-grid,
+    .humain-grid,
+    .approche-cards { grid-template-columns: 1fr; gap: 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Hubro</div>
+  <ul class="nav-links">
+    <li><a href="#probleme">Le problème</a></li>
+    <li><a href="#approche">Notre approche</a></li>
+    <li><a href="#humain">Côté humain</a></li>
+    <li><a href="#contact" class="nav-cta">Discutons</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-tag">Audit de performance — Montréal</span>
+    <h1>Ce qui ralentit votre équipe <em>n'est pas toujours visible.</em></h1>
+    <p>Hubro aide les agences à identifier les frictions du quotidien — dans l'organisation, la communication et la dynamique d'équipe — et à trouver des ajustements concrets et durables.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Démarrer une conversation</a>
+      <a href="#approche" class="btn-secondary">Notre approche →</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEME -->
+<section class="probleme" id="probleme">
+  <div class="probleme-grid">
+    <div>
+      <span class="section-tag reveal">Le constat</span>
+      <h2 class="section-title reveal">La plupart des agences performent bien. Mais à quel coût ?</h2>
+      <p class="section-sub reveal">Les inefficacités ne sont pas toujours évidentes. Elles s'accumulent silencieusement et finissent par affecter autant la productivité que le bien-être de l'équipe.</p>
+      <ul class="friction-list reveal">
+        <li>Des priorités qui changent souvent et qui rendent la coordination difficile</li>
+        <li>De l'information qui se perd entre les équipes sans qu'on sache où ça accroche</li>
+        <li>Des processus qui fonctionnaient bien avant, mais qui ne suivent plus la croissance</li>
+        <li>Une culture d'équipe positive, mais où certaines choses restent difficiles à aborder</li>
+        <li>Un rythme de travail soutenu qui laisse peu de place pour prendre du recul</li>
+      </ul>
+    </div>
+    <div class="probleme-visual reveal">
+      <div class="stat-card">
+        <div class="stat-number">Structure</div>
+        <div class="stat-label">Ce qui fonctionnait à 5 personnes ne fonctionne plus nécessairement à 20 — c'est normal, pas un échec</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">Culture</div>
+        <div class="stat-label">Une bonne ambiance d'équipe se construit activement — pas seulement avec de bonnes intentions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">Regard extérieur</div>
+        <div class="stat-label">Parfois, il suffit d'un œil neuf pour voir ce qu'on ne voit plus de l'intérieur</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROCHE -->
+<section class="approche" id="approche">
+  <div class="approche-intro reveal">
+    <span class="section-tag">Comment on travaille</span>
+    <h2 class="section-title">Une approche terrain, pas des grands rapports.</h2>
+    <p class="section-sub">On observe comment votre équipe fonctionne réellement, on identifie ce qui freine, et on propose des ajustements concrets — sans complexifier ce qui marche déjà.</p>
+  </div>
+  <div class="approche-cards">
+    <div class="approche-card reveal">
+      <div class="card-number">01</div>
+      <div class="card-title">Observation terrain</div>
+      <p class="card-text">On commence par comprendre comment votre équipe fonctionne au quotidien — pas en théorie, mais dans la réalité de votre environnement de travail.</p>
+    </div>
+    <div class="approche-card reveal">
+      <div class="card-number">02</div>
+      <div class="card-title">Identification des frictions</div>
+      <p class="card-text">On repère les points de friction concrets : où le temps se perd, où la communication coince, où l'énergie de l'équipe s'épuise inutilement.</p>
+    </div>
+    <div class="approche-card reveal">
+      <div class="card-number">03</div>
+      <div class="card-title">Ajustements réalistes</div>
+      <p class="card-text">On propose des améliorations simples et applicables rapidement. Pas de transformation radicale — des changements qui s'intègrent naturellement à votre façon de travailler.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HUMAIN -->
+<section class="humain" id="humain">
+  <div class="humain-grid">
+    <div class="humain-visual reveal">
+      <div class="humain-box">
+        <span class="quote-mark">"</span>
+        <p class="quote-text">Les vrais problèmes d'efficacité viennent rarement des outils ou des processus. Ils viennent des personnes — et de la façon dont elles travaillent ensemble.</p>
+      </div>
+    </div>
+    <div>
+      <span class="section-tag reveal">Le côté humain</span>
+      <h2 class="section-title reveal">On travaille autant sur les personnes que sur les processus.</h2>
+      <p class="section-sub reveal">Parce que dans la plupart des cas, ce qui ralentit une équipe n'est pas un problème de système — c'est un problème de dynamique humaine.</p>
+      <div class="humain-points">
+        <div class="humain-point reveal">
+          <div class="point-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="point-content">
+            <h4>Dynamique d'équipe</h4>
+            <p>On observe comment les personnes interagissent, collaborent et communiquent entre elles au quotidien.</p>
+          </div>
+        </div>
+        <div class="humain-point reveal">
+          <div class="point-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div class="point-content">
+            <h4>Bien-être de l'équipe</h4>
+            <p>On tient compte du stress et de la charge de travail, parce qu'une équipe épuisée est une équipe moins efficace.</p>
+          </div>
+        </div>
+        <div class="humain-point reveal">
+          <div class="point-icon">
+            <svg viewBox="0 0 24 24" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="point-content">
+            <h4>Clarté des rôles</h4>
+            <p>On identifie les zones de flou dans les responsabilités qui créent de la confusion et de la friction.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <span class="section-tag" style="color: var(--silver); display:block; margin-bottom:1rem;">Sans engagement</span>
+  <h2 class="section-title">Parlons de votre équipe.</h2>
+  <p class="section-sub">Un court échange de 20 minutes pour voir si le sujet vous parle et si on peut vous aider concrètement.</p>
+  <div class="contact-form">
+    <input type="text" placeholder="Votre nom">
+    <input type="email" placeholder="Votre courriel">
+    <input type="text" placeholder="Nom de votre agence">
+    <textarea placeholder="Qu'est-ce qui vous amène ? (optionnel)"></textarea>
+    <button type="button">Envoyer un message</button>
+  </div>
+  <div class="contact-info">
+    Ou écrivez-nous directement à <a href="mailto:contact.hubro@gmail.com">contact.hubro@gmail.com</a> · <a href="tel:4384102229">438-410-2229</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Hubro</div>
+  <div class="footer-copy">© 2025 Hubro. Montréal, Québec.</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
