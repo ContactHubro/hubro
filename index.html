@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HUBRO aide les PME québécoises à comprendre les frictions opérationnelles, documenter les causes et prioriser des actions réalistes." />
+  <title>HUBRO | Audit de performance opérationnelle au Québec</title>
+  <style>
+    :root { --navy:#102A43; --gold:#C59D3B; --cream:#F7F3EC; --pale:#E8F0F7; --ink:#1F2933; --muted:#52606D; --white:#FFFFFF; --line:#CBD5E1; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.6; color:var(--ink); background:var(--cream); }
+    a { color:inherit; }
+    .skip-link { position:absolute; left:-999px; top:auto; overflow:hidden; }
+    .skip-link:focus { left:1rem; top:1rem; z-index:100; background:#fff; padding:.75rem 1rem; color:var(--navy); border-radius:.4rem; }
+    .container { width:min(1160px, calc(100% - 2.5rem)); margin:auto; }
+    header { position:sticky; top:0; z-index:10; background:rgba(255,255,255,.98); border-bottom:1px solid var(--line); }
+    .nav { min-height:72px; display:flex; justify-content:space-between; align-items:center; gap:1.25rem; }
+    .logo { font-size:1.3rem; font-weight:900; letter-spacing:.18em; text-decoration:none; color:var(--navy); }
+    .logo span { color:var(--gold); }
+    .links { display:flex; align-items:center; gap:1.1rem; }
+    .links a { text-decoration:none; font-weight:750; color:var(--navy); font-size:.91rem; }
+    .links a:hover, .links a:focus { text-decoration:underline; text-underline-offset:4px; }
+    .button { display:inline-block; text-decoration:none; border:2px solid var(--gold); border-radius:.45rem; padding:.78rem 1.05rem; background:var(--gold); color:#102A43; font-weight:850; transition:.18s; }
+    .button:hover, .button:focus { background:#e2bd60; border-color:#e2bd60; text-decoration:none!important; }
+    .button--outline { background:transparent; color:#fff; border-color:#fff; }
+    .button--outline:hover, .button--outline:focus { background:#fff; color:var(--navy); }
+    .hero { overflow:hidden; position:relative; background:var(--navy); color:#fff; }
+    .hero::after { content:""; position:absolute; width:42rem; height:42rem; right:-24rem; top:-21rem; border:1px solid rgba(197,157,59,.6); border-radius:50%; box-shadow:0 0 0 3.5rem rgba(197,157,59,.06),0 0 0 8rem rgba(197,157,59,.04); }
+    .hero-grid { min-height:630px; position:relative; z-index:1; display:grid; grid-template-columns:1.25fr .75fr; align-items:center; gap:3rem; padding:4rem 0; }
+    .eyebrow { color:#f4d681; font-weight:850; letter-spacing:.1em; text-transform:uppercase; font-size:.77rem; }
+    .eyebrow--dark { color:#8A691B; }
+    h1,h2,h3 { line-height:1.16; }
+    h1 { font-size:clamp(2.55rem,5.4vw,5rem); letter-spacing:-.035em; margin:.55rem 0 1.1rem; }
+    h2 { font-size:clamp(2.05rem,3.8vw,3.25rem); margin:.4rem 0 .9rem; letter-spacing:-.025em; color:var(--navy); }
+    h3 { margin:.45rem 0 .55rem; color:var(--navy); font-size:1.1rem; }
+    .hero p { max-width:650px; font-size:1.12rem; color:#E6EDF4; }
+    .actions { display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1.55rem; }
+    .reassure { margin-top:1.15rem; font-size:.93rem; color:#D9E2EC; }
+    .dossier { padding:1.5rem; border:1px solid rgba(255,255,255,.27); background:rgba(255,255,255,.07); border-radius:.6rem; box-shadow:0 15px 40px rgba(0,0,0,.12); }
+    .tag { display:inline-block; padding:.2rem .55rem; background:#F6D988; color:#102A43; border-radius:.2rem; font-size:.74rem; font-weight:900; letter-spacing:.05em; }
+    .dossier h2 { color:#fff; font-size:1.65rem; margin:.8rem 0; }
+    .dossier p { font-size:1rem; color:#E6EDF4; }
+    .dossier-grid { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; margin-top:1.2rem; }
+    .dossier-grid div { border-top:1px solid rgba(255,255,255,.35); padding-top:.55rem; font-size:.88rem; color:#F0F4F8; }
+    section { padding:5rem 0; }
+    .white { background:var(--white); }
+    .pale { background:var(--pale); }
+    .intro { max-width:770px; margin-bottom:2rem; }
+    .intro p { color:var(--muted); font-size:1.07rem; margin:0; }
+    .card-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+    .card { background:#fff; border:1px solid #D9E2EC; border-radius:.65rem; padding:1.3rem; box-shadow:0 5px 18px rgba(16,42,67,.05); }
+    .number { color:var(--gold); font-weight:900; font-size:1.45rem; }
+    .card p { margin:0; color:var(--muted); font-size:.95rem; }
+    .statement { background:var(--navy); color:#fff; }
+    .statement h2 { color:#fff; max-width:810px; }
+    .statement p { max-width:830px; color:#D9E2EC; font-size:1.12rem; }
+    .steps { display:grid; grid-template-columns:repeat(7,1fr); gap:.65rem; }
+    .step { background:#fff; min-height:166px; padding:1rem; border-top:4px solid var(--gold); border-radius:.35rem; }
+    .step-no { color:var(--gold); font-weight:900; }
+    .step h3 { margin:.35rem 0; font-size:1rem; }
+    .step p { margin:0; color:var(--muted); font-size:.84rem; }
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+    .copy p { color:var(--muted); }
+    .check-list { list-style:none; padding:0; margin:1.15rem 0 0; }
+    .check-list li { position:relative; padding:.5rem 0 .5rem 1.65rem; border-bottom:1px solid #D9E2EC; }
+    .check-list li::before { content:"✓"; position:absolute; left:0; color:#8A691B; font-weight:900; }
+    .rule { background:#F4EBD6; border-left:5px solid var(--gold); padding:1.5rem; border-radius:.2rem; }
+    .rule h3 { margin-top:0; }
+    .faq { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    details { padding:1rem; background:#fff; border:1px solid #D9E2EC; border-radius:.5rem; }
+    summary { cursor:pointer; color:var(--navy); font-weight:850; }
+    details p { color:var(--muted); margin:.8rem 0 0; }
+    .contact { background:var(--navy); color:#fff; }
+    .contact h2 { color:#fff; }
+    .contact p { max-width:680px; color:#D9E2EC; }
+    .contact-options { display:flex; gap:.75rem; flex-wrap:wrap; margin:1.35rem 0; }
+    .contact-options a { background:#fff; color:var(--navy); text-decoration:none; font-weight:850; padding:.8rem 1rem; border-radius:.45rem; }
+    .contact-options a:hover, .contact-options a:focus { outline:3px solid #F6D988; }
+    footer { padding:2.25rem 0; background:#0B2033; color:#D9E2EC; font-size:.91rem; }
+    .footer-grid { display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+    footer a { color:#fff; }
+    @media (max-width:900px) { .links { display:none; } .hero-grid,.two-col { grid-template-columns:1fr; } .hero-grid { min-height:auto; padding:4.2rem 0; } .dossier { max-width:560px; } .card-grid { grid-template-columns:repeat(2,1fr); } .steps { grid-template-columns:repeat(2,1fr); } .faq { grid-template-columns:1fr; } }
+    @media (max-width:520px) { .container { width:min(100% - 2rem, 1160px); } section { padding:3.8rem 0; } h1 { font-size:2.5rem; } .card-grid,.steps { grid-template-columns:1fr; } .button { width:100%; text-align:center; } .dossier-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  <header>
+    <div class="container nav">
+      <a class="logo" href="#accueil" aria-label="HUBRO - accueil">HUB<span>RO</span></a>
+      <nav class="links" aria-label="Navigation principale">
+        <a href="#methode">Notre méthode</a><a href="#services">Services</a><a href="#apropos">À propos</a><a href="#faq">FAQ</a><a href="#contact">Contact</a><a class="button" href="#contact">Parler à HUBRO</a>
+      </nav>
+    </div>
+  </header>
+  <main id="contenu">
+    <section id="accueil" class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Audit de performance opérationnelle · Québec</div>
+          <h1>Les problèmes visibles ne sont pas toujours les vrais problèmes.</h1>
+          <p>HUBRO observe le fonctionnement réel de votre entreprise, compare les perceptions de vos équipes et identifie les causes des pertes de temps, des frictions et des inefficacités.</p>
+          <div class="actions"><a class="button" href="#contact">Parler à HUBRO</a><a class="button button--outline" href="#methode">Découvrir notre méthode</a></div>
+          <p class="reassure">Une démarche structurée. Des constats vérifiés. Des actions priorisées.</p>
+        </div>
+        <aside class="dossier" aria-label="Aperçu de la démarche HUBRO">
+          <span class="tag">DOSSIER · HUBRO</span><h2>Comprendre avant de recommander.</h2>
+          <p>Pas de coupable. Pas de solution toute faite. Une lecture structurée de ce qui se passe réellement.</p>
+          <div class="dossier-grid"><div>Observer le terrain</div><div>Écouter les équipes</div><div>Vérifier les constats</div><div>Prioriser l’action</div></div>
+        </aside>
+      </div>
+    </section>
+    <section class="white">
+      <div class="container">
+        <div class="intro"><div class="eyebrow eyebrow--dark">Ce qui ralentit</div><h2>Votre entreprise fonctionne. Mais fonctionne-t-elle aussi efficacement qu’elle le pourrait?</h2><p>Les symptômes sont souvent faciles à voir. Leur cause, beaucoup moins. HUBRO aide à les distinguer.</p></div>
+        <div class="card-grid">
+          <article class="card"><div class="number">01</div><h3>Le temps qui disparaît</h3><p>Recherches, attentes, interruptions et tâches répétées prennent de la place sans toujours être mesurés.</p></article>
+          <article class="card"><div class="number">02</div><h3>Les mêmes questions</h3><p>L’information existe, mais personne ne sait où la trouver ou à qui s’adresser.</p></article>
+          <article class="card"><div class="number">03</div><h3>Les perceptions divergent</h3><p>La direction, les gestionnaires et les employés ne vivent pas toujours la même réalité.</p></article>
+          <article class="card"><div class="number">04</div><h3>Les solutions ne durent pas</h3><p>Une amélioration est annoncée, puis le fonctionnement revient rapidement à l’ancien modèle.</p></article>
+        </div>
+      </div>
+    </section>
+    <section class="statement"><div class="container"><div class="eyebrow">La position HUBRO</div><h2>On ne cherche pas un coupable. On cherche la cause.</h2><p>Un problème répété peut venir d’un processus flou, d’une information difficile à trouver, d’une responsabilité mal définie ou d’une décision qui bloque. HUBRO sépare les impressions des faits avant de recommander une action.</p></div></section>
+    <section id="methode" class="pale">
+      <div class="container"><div class="intro"><div class="eyebrow eyebrow--dark">Notre méthode</div><h2>Passer de l’hypothèse au constat vérifié.</h2><p>Les questionnaires seuls ne servent pas à diagnostiquer une entreprise. Ils servent à détecter les zones qui méritent une enquête.</p></div>
+        <div class="steps">
+          <article class="step"><div class="step-no">01</div><h3>Définir</h3><p>Comprendre le besoin et le périmètre du mandat.</p></article><article class="step"><div class="step-no">02</div><h3>Décrire</h3><p>Documenter le fonctionnement actuel.</p></article><article class="step"><div class="step-no">03</div><h3>Découvrir</h3><p>Recueillir les perceptions avec discrétion.</p></article><article class="step"><div class="step-no">04</div><h3>Détecter</h3><p>Repérer les frictions et les écarts.</p></article><article class="step"><div class="step-no">05</div><h3>Diagnostiquer</h3><p>Chercher les causes probables.</p></article><article class="step"><div class="step-no">06</div><h3>Décider</h3><p>Prioriser des actions réalistes.</p></article><article class="step"><div class="step-no">07</div><h3>Démontrer</h3><p>Présenter constats, preuves et recommandations.</p></article>
+        </div><div class="actions"><a class="button" href="#contact">Demander une discussion confidentielle</a></div>
+      </div>
+    </section>
+    <section id="services" class="white"><div class="container two-col"><div class="copy"><div class="eyebrow eyebrow--dark">Services</div><h2>Un audit pour comprendre. Un accompagnement pour avancer.</h2><p>Chaque mandat commence par un Audit HUBRO : une lecture structurée de votre fonctionnement et un rapport clair pour soutenir vos décisions.</p><ul class="check-list"><li>Observation sur le terrain</li><li>Questionnaires aux employés</li><li>Rencontre avec la direction</li><li>Analyse et comparaison des réponses</li><li>Identification des problèmes et solutions suggérées</li><li>Rapport final</li></ul></div><aside class="rule"><h3>La règle des trois angles</h3><p>Une réponse est un signal. Plusieurs sources concordantes — perception, observation, donnée, document, entrevue ou conséquence — permettent de construire un constat plus solide.</p><p>Des extras, un suivi et un accompagnement d’implantation peuvent être proposés selon les besoins identifiés, sans promesse d’économies ou de résultats garantis.</p></aside></div></section>
+    <section id="apropos" class="pale"><div class="container two-col"><div class="copy"><div class="eyebrow eyebrow--dark">À propos</div><h2>Une vision moderne de l’analyse d’entreprise.</h2><p>HUBRO est une entreprise québécoise d’audit et d’amélioration de la performance opérationnelle. Notre approche combine l’observation du terrain, l’écoute des équipes, l’analyse des processus et la vérification des constats.</p><p>Les employés, les gestionnaires et la direction voient chacun une partie de la réalité. HUBRO compare ces perspectives avec le fonctionnement réel afin d’aider l’entreprise à décider avec plus de clarté.</p></div><article class="card"><h3>Notre façon de travailler</h3><ul class="check-list"><li>Neutralité</li><li>Respect</li><li>Confidentialité</li><li>Vérification</li><li>Utilité</li><li>Proportionnalité</li></ul></article></div></section>
+    <section id="faq" class="white"><div class="container"><div class="intro"><div class="eyebrow eyebrow--dark">FAQ</div><h2>Questions fréquentes</h2></div><div class="faq"><details><summary>Est-ce que HUBRO cherche des coupables?</summary><p>Non. HUBRO cherche les causes, les conditions de fonctionnement et les processus qui créent les problèmes.</p></details><details><summary>Les réponses des employés sont-elles anonymes?</summary><p>Les réponses sont recueillies et présentées de manière regroupée. La procédure de collecte est expliquée honnêtement, notamment lorsque de petits groupes peuvent limiter l’anonymat.</p></details><details><summary>HUBRO travaille-t-elle dans un secteur précis?</summary><p>La méthode peut être adaptée au contexte, au secteur, à la taille et aux enjeux de différentes entreprises.</p></details><details><summary>L’audit garantit-il des économies?</summary><p>Non. HUBRO identifie des sources possibles de pertes et propose des actions. Les résultats dépendent de la situation et de la mise en œuvre.</p></details></div></div></section>
+    <section id="contact" class="contact"><div class="container"><div class="eyebrow">Contact</div><h2>Ouvrons le dossier.</h2><p>Parlez-nous de ce qui vous préoccupe dans votre entreprise. Cette première prise de contact ne vous engage à rien : elle sert à comprendre votre situation et à vérifier si HUBRO est la bonne démarche.</p><div class="contact-options"><a href="tel:+14384102229" aria-label="Appeler HUBRO au 438-410-2229">438&nbsp;410‑2229</a><a href="mailto:contact.hubro@gmail.com">contact.hubro@gmail.com</a></div><p class="reassure">Vos informations servent uniquement à répondre à votre demande. Elles ne sont ni vendues ni publiées sans autorisation.</p></div></section>
+  </main>
+  <footer><div class="container footer-grid"><div><strong>HUBRO</strong> · Observer. Comprendre. Améliorer.</div><div><a href="mailto:contact.hubro@gmail.com">contact.hubro@gmail.com</a> · <a href="tel:+14384102229">438&nbsp;410‑2229</a></div><div>© 2026 HUBRO</div></div></footer>
+</body>
+</html>
